@@ -1,9 +1,10 @@
+// src/index.js (atau file utama Anda)
 const express = require("express");
 const cors = require("cors");
 const permitDrivingRoutes = require("./src/routes/permitDrivingRoutes");
 const carRoutes = require("./src/routes/carRoutes");
 const userRoutes = require("./src/routes/userRoutes");
-const safetyRecordRoutes = require("./src/routes/safetyRecordRoutes"); // Tambahkan ini
+const safetyRecordRoutes = require("./src/routes/safetyRecordRoutes");
 
 const app = express();
 
@@ -17,6 +18,11 @@ app.use(cors({
 }));
 
 app.use(express.json());
+
+// Endpoint sambutan untuk root API
+app.get('/', (req, res) => {
+  res.json({ message: "Welcome to the API!" });
+});
 
 // Menggunakan rute permitDriving
 app.use("/permitDriving", permitDrivingRoutes);
