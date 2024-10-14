@@ -1,0 +1,37 @@
+const express = require("express");
+const cors = require("cors");
+const permitDrivingRoutes = require("./src/routes/permitDrivingRoutes");
+const carRoutes = require("./src/routes/carRoutes");
+const userRoutes = require("./src/routes/userRoutes");
+const safetyRecordRoutes = require("./src/routes/safetyRecordRoutes"); // Tambahkan ini
+
+const app = express();
+
+// Middleware CORS untuk mengizinkan semua asal
+app.use(cors({
+  origin: (origin, callback) => {
+    // Mengizinkan semua origin
+    callback(null, true);
+  },
+  credentials: true, // Mengizinkan cookies dan credentials
+}));
+
+app.use(express.json());
+
+// Menggunakan rute permitDriving
+app.use("/permitDriving", permitDrivingRoutes);
+
+// Menggunakan rute untuk mobil
+app.use("/cars", carRoutes);
+
+// Menggunakan rute untuk pengguna
+app.use("/users", userRoutes); // Menambahkan prefix "/users" pada semua rute pengguna
+
+// Menggunakan rute untuk catatan keselamatan
+app.use("/safetyRecords", safetyRecordRoutes); // Tambahkan ini
+
+// Menjalankan server
+const PORT = process.env.PORT || 3001;
+app.listen(PORT, () => {
+  console.log(`Server is running on http://localhost:${PORT}`);
+});

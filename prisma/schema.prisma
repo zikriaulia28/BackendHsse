@@ -1,0 +1,91 @@
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  // directUrl = env("DIRECT_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model PermitDriving {
+  id                Int      @id @default(autoincrement())
+  date              DateTime
+  namaPengemudi     String
+  car               Car      @relation(fields: [carId], references: [id])
+  carId             Int
+  tujuan            String
+  barangBawaan      String
+  pemohon           String
+  pemberiIzin       String
+  petugasSecurity   String
+  kmAwal            String
+  kmAkhir           String?
+  jamKeluar         DateTime 
+  jamMasuk          DateTime?
+  status            String
+  fuelLevel         String
+  user              User?     @relation("PermitCreator", fields: [userId], references: [id])
+  userId            Int?
+
+  @@index([carId])
+  @@index([userId])
+}
+
+model Car {
+  id        Int        @id @default(autoincrement())
+  nopol     String     @unique
+  model     String
+  usageLogs UsageLog[]
+  permits   PermitDriving[]
+}
+
+model UsageLog {
+  id        Int      @id @default(autoincrement())
+  date      DateTime
+  kmUsed    Float
+  car       Car      @relation(fields: [carId], references: [id])
+  carId     Int
+
+  @@index([carId])
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name  String
+  role      Role     @default(user)
+  position  Position?
+  permits   PermitDriving[] @relation("PermitCreator")
+}
+
+enum Role {
+  user
+  admin
+}
+
+enum Position {
+  Supervisor
+  FacilityTechnician
+  FacilitySupport
+  Security
+}
+
+model SafetyRecord {
+  id                          Int       @id @default(autoincrement())
+  date                        DateTime  // Corresponds to the "Date" field
+  monthlySafeManhours         Int       // Monthly Safe Manhours
+  ytdSafeManhours             Int       // Year-to-Date Safe Manhours
+  cumulativeSafeManhours      Int       // Cumulative Safe Manhours
+  monthlySafeDriving          Int       // Monthly Safe Driving
+  ytdSafeDriving              Int       // Year-to-Date Safe Driving
+  cumulativeSafeDriving       Int       // Cumulative Safe Driving
+  fatality                   Int       // Fatality count
+  lostTimeInjury             Int       // Lost Time Injury count
+  incidentAccident           Int       // Incident/Accident count
+  totalSicknessAbsence       Float     // Total Sickness Absence percentage
+  sicknessAbsenceFrequency    Float     // Sickness Absence Frequency
+  environmentPollution       Int       // Environment Pollution incidents
+  securityIncident            Int       // Security Incidents
+}
