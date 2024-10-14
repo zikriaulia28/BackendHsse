@@ -20,8 +20,11 @@ app.use(cors({
 app.use(express.json());
 
 // Endpoint sambutan untuk root API
-app.get('/', (req, res) => {
-  res.json({ message: "Welcome to the API!" });
+app.get("/", (req, res) => {
+  res.json({
+    message: "Welcome to the API!",
+    description: "This is the welcome page for your API. You can access various endpoints from here.",
+  });
 });
 
 // Menggunakan rute permitDriving
