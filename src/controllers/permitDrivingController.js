@@ -308,60 +308,69 @@ const createUsageLog = async (req, res) => {
 // };
 
 const getTotalKmUsage = async (req, res) => {
-  const { date, month, year } = req.query;
+  const { year, month } = req.query;
 
   try {
     let usageLogs;
 
-    // Jika ada query 'date'
-    if (date) {
-      usageLogs = await prisma.usageLog.findMany({
-        where: {
-          date: new Date(date),
-        },
-        include: { car: true },
-      });
-    }
-    // Jika ada query 'month'
-    else if (month) {
-      const [yearPart, monthPart] = month.split("-");
+    // Jika hanya tahun diberikan
+    if (year && !month) {
       usageLogs = await prisma.usageLog.findMany({
         where: {
           date: {
-            gte: new Date(`${yearPart}-${monthPart}-01`),
-            lt: new Date(`${yearPart}-${parseInt(monthPart) + 1}-01`),
+            gte: new Date(`${year}-01-01`), // Mulai dari 1 Januari
+            lt: new Date(`${parseInt(year) + 1}-01-01`), // Sampai sebelum 1 Januari tahun berikutnya
           },
         },
         include: { car: true },
       });
     }
-    // Jika ada query 'year'
-    else if (year) {
+    // Jika tahun dan bulan diberikan
+    else if (year && month) {
+      const startDate = new Date(`${year}-${month}-01`);
+      const endDate = new Date(year, month, 0); // Menggunakan 0 untuk mendapatkan hari terakhir bulan tersebut
+
       usageLogs = await prisma.usageLog.findMany({
         where: {
           date: {
-            gte: new Date(`${year}-01-01`),
-            lt: new Date(`${parseInt(year) + 1}-01-01`),
+            gte: startDate,
+            lt: new Date(endDate.getFullYear(), endDate.getMonth() + 1, 1), // Tanggal pertama bulan berikutnya
           },
         },
         include: { car: true },
       });
-    }
-    // Jika tidak ada query
-    else {
-      return res.status(400).json({ error: "Please provide date, month, or year query" });
+    } else {
+      return res.status(400).json({ error: "Please provide year and optionally month query" });
     }
 
     if (usageLogs.length === 0) {
       return res.status(404).json({ message: "No usage logs found for the given date range" });
     }
 
-    // Menghitung total KM yang digunakan
-    const totalKmUsed = usageLogs.reduce((total, log) => total + log.kmUsed, 0);
+    // Mengelompokkan dan menjumlahkan kmUsed berdasarkan car
+    const groupedUsage = usageLogs.reduce((acc, log) => {
+      const carId = log.car.id; // Asumsikan id dari car
+      if (!acc[carId]) {
+        acc[carId] = {
+          car: log.car,
+          totalKmUsed: 0,
+          lastDate: log.date, // Menyimpan tanggal terakhir penggunaan
+        };
+      }
+      acc[carId].totalKmUsed += log.kmUsed; // Menjumlahkan kmUsed
+      acc[carId].lastDate = log.date; // Memperbarui tanggal terakhir penggunaan
+      return acc;
+    }, {});
+
+    // Mengubah objek menjadi array dan format tanggal
+    const totalUsageLogs = Object.values(groupedUsage).map(log => ({
+      car: log.car,
+      totalKmUsed: log.totalKmUsed,
+      lastDate: log.lastDate, // Menyertakan tanggal terakhir
+    }));
 
     res.json({
-      totalKmUsed,
-      usageLogs,
+      totalUsageLogs, // Mengembalikan hasil yang telah dikelompokkan
     });
   } catch (error) {
     console.error(error);
