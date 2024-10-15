@@ -1,3 +1,8 @@
+# Ignore node modules
 node_modules
+
+# Ignore Prisma SQLite database
+prisma/dev.db
+
 # Keep environment variables out of version control
 .env
