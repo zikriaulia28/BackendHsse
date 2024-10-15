@@ -11,11 +11,5 @@
       "src": "/(.*)",
       "dest": "/index.js"
     }
-  ],
-  "env": {
-    "DATABASE_URL": "@your-database-url"
-  },
-  "build": {
-    "commands": ["npm install", "npx prisma generate"]
-  }
+  ]
 }
