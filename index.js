@@ -5,6 +5,7 @@ const permitDrivingRoutes = require("./src/routes/permitDrivingRoutes");
 const carRoutes = require("./src/routes/carRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const safetyRecordRoutes = require("./src/routes/safetyRecordRoutes");
+const usaTemuanRoutes = require('./src/routes/usaTemuanRoutes');
 
 const app = express();
 
@@ -38,6 +39,9 @@ app.use("/users", userRoutes); // Menambahkan prefix "/users" pada semua rute pe
 
 // Menggunakan rute untuk catatan keselamatan
 app.use("/safetyRecords", safetyRecordRoutes); // Tambahkan ini
+
+app.use('/usaTemuan', usaTemuanRoutes);
+
 
 // Menjalankan server
 const PORT = process.env.PORT || 3001;

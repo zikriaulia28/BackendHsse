@@ -89,3 +89,27 @@ model SafetyRecord {
   environmentPollution       Int       // Environment Pollution incidents
   securityIncident            Int       // Security Incidents
 }
+
+model USATemuan {
+  id                     Int      @id @default(autoincrement())
+  nama                   String
+  status                 String
+  judul                  String
+  lokasiTemuan           String
+  areaSpesifik           String
+  jenisTemuan            JenisTemuan
+  uscConditionTerkait     String?
+  usaPracticeTerkait      String?
+  penyebabKetidaksesuaian String?
+  tindakanPerbaikan       String?
+  tindakanPencegahan      String?
+  fotoSebelum            String?
+  fotoClosing            String?
+  waktu                  DateTime
+  statusAkhir            String?
+}
+
+enum JenisTemuan {
+  USA
+  USC
+}
