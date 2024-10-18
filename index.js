@@ -6,6 +6,7 @@ const carRoutes = require("./src/routes/carRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const safetyRecordRoutes = require("./src/routes/safetyRecordRoutes");
 const usaTemuanRoutes = require('./src/routes/usaTemuanRoutes');
+const ptwRoutes = require('./src/routes/ptwRoutes');
 
 const app = express();
 
@@ -41,6 +42,8 @@ app.use("/users", userRoutes); // Menambahkan prefix "/users" pada semua rute pe
 app.use("/safetyRecords", safetyRecordRoutes); // Tambahkan ini
 
 app.use('/usaTemuan', usaTemuanRoutes);
+
+app.use('/ptw', ptwRoutes);
 
 
 // Menjalankan server

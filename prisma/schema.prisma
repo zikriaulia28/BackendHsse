@@ -113,3 +113,19 @@ enum JenisTemuan {
   USA
   USC
 }
+
+model PTWLog {
+  id                 Int      @id @default(autoincrement())
+  date               DateTime // The date of the PTW log
+  noPTW              String   // The PTW number (e.g., 00552/PTW-RO1/2024)
+  workDescription    String   // A description of the work (e.g., "Perbaikan Mess dan Renovasi Pos Security")
+  section            String   // The section/department involved (e.g., Jabung Compressor Station)
+  typeOfWork         String   // The type of work (e.g., "Cold Work Permit")
+  receivingAuthority String   // The name of the receiving authority (e.g., "Asdian Rustadianto")
+  status             String   // The status (e.g., Open, Closed)
+  hsseRemark         String?  // HSSE Remark (can be nullable)
+  scan               String?  // Optional field for scanned documents (can be nullable)
+  createdAt          DateTime @default(now()) // When the entry was created
+  updatedAt          DateTime @updatedAt      // Automatically updated on change
+}
+

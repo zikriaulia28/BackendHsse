@@ -9,22 +9,22 @@ cloudinary.config({
   secure: true,
 });
 
-// Konfigurasi CloudinaryStorage untuk memastikan ekstensi tidak ditambahkan dua kali
+// Konfigurasi CloudinaryStorage untuk mendukung PDF dan gambar
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'usa-temuan',
+    folder: 'usa-temuan', // Folder untuk menyimpan file di Cloudinary
+    resource_type: 'auto', // Mendukung semua jenis file (pdf, image, dll.)
     format: async (req, file) => {
-      // Pastikan ekstensi yang sesuai diambil dari file asli
+      // Mengambil format file sesuai dengan ekstensi asli (jpeg, png, pdf, dll.)
       const ext = file.originalname.split('.').pop();
-      return ext; // Format sesuai ekstensi asli (jpeg, png)
+      return ext; // Kembalikan ekstensi asli file
     },
     public_id: (req, file) => {
-      // Atur nama file sesuai keperluan, pastikan tidak ada ekstensi ganda
+      // Atur nama file di Cloudinary tanpa menambahkan ekstensi ganda
       return file.originalname.replace(/\.[^/.]+$/, ""); // Menghapus ekstensi jika ada
     }
   },
 });
-
 
 module.exports = { cloudinary, storage };
