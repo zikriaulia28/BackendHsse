@@ -70,6 +70,7 @@ enum Position {
   FacilityTechnician
   FacilitySupport
   Security
+  Driver
 }
 
 model SafetyRecord {

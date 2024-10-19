@@ -79,6 +79,26 @@ const loginUser = async (req, res) => {
   }
 };
 
+const getAllUsers = async (req, res) => {
+  try {
+    // Mengambil semua pengguna dari database
+    const users = await prisma.user.findMany({
+      select: {
+        id: true,
+        email: true,
+        role: true,
+        position: true,
+        name: true,
+      }, // Select fields to return, exclude sensitive data like password
+    });
+
+    res.status(200).json(users); // Mengirimkan data pengguna
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Error fetching users" });
+  }
+};
+
 // Endpoint untuk mengubah password pengguna
 const changePassword = async (req, res) => {
   const { userId, oldPassword, newPassword } = req.body;
@@ -127,10 +147,45 @@ const logoutUser = (req, res) => {
   res.json({ message: "User logged out successfully" });
 };
 
+// Update user (exclude password)
+const updateUser = async (req, res) => {
+  const { id } = req.params; // Get user ID from URL parameters
+  const { email, name, role, position } = req.body;
+
+  try {
+    const updatedUser = await prisma.user.update({
+      where: { id: Number(id) }, // Ensure the ID is a number
+      data: { email, name, role, position },
+    });
+    res.status(200).json({ message: "User updated successfully", user: updatedUser });
+  } catch (error) {
+    console.error("Error updating user:", error);
+    res.status(500).json({ error: "Error updating user" });
+  }
+};
+
+// Delete user
+const deleteUser = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    await prisma.user.delete({
+      where: { id: parseInt(id) },
+    });
+    res.status(200).json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Error deleting user" });
+  }
+};
+
 // Ekspor fungsi
 module.exports = {
   registerUser,
   loginUser,
   changePassword, // Tambahkan ini
-  logoutUser
+  logoutUser,
+  getAllUsers,
+  updateUser,
+  deleteUser
 };

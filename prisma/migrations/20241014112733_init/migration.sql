@@ -2,7 +2,7 @@
 CREATE TYPE "Role" AS ENUM ('user', 'admin');
 
 -- CreateEnum
-CREATE TYPE "Position" AS ENUM ('Supervisor', 'FacilityTechnician', 'FacilitySupport', 'Security');
+CREATE TYPE "Position" AS ENUM ('Supervisor', 'FacilityTechnician', 'FacilitySupport', 'Security', 'Driver');
 
 -- CreateTable
 CREATE TABLE "PermitDriving" (
