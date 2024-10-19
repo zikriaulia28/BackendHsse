@@ -1,5 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require('../../lib/prismaClient');
 
 // Utility function untuk error logging
 const handleError = (res, error, message, statusCode = 500) => {

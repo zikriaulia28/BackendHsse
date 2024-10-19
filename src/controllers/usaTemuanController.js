@@ -1,5 +1,4 @@
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require('../../lib/prismaClient');
 const multer = require('multer');
 const { storage } = require('../config/cloudinaryConfig'); // Import cloudinary config
 

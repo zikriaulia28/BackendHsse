@@ -1,5 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-const prisma = new PrismaClient();
+const prisma = require('../../lib/prismaClient');
 
 const createCar = async (req, res) => {
   const { nopol, model } = req.body;

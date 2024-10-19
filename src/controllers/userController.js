@@ -1,8 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
+const prisma = require('../../lib/prismaClient');
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-const prisma = new PrismaClient();
 const JWT_SECRET = process.env.JWT_SECRET; // Pastikan ini diatur di file .env
 
 // Endpoint untuk registrasi pengguna
